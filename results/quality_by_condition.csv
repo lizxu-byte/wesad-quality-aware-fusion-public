@@ -1,0 +1,4 @@
+condition,n_windows,mean_q_ecg,mean_q_bvp,mean_q_eda_chest,mean_q_eda_wrist,mean_q_resp,mean_q_emg,mean_q_temp_chest,mean_q_temp_wrist,mean_q_acc_chest,mean_q_acc_wrist,share_q_bvp_ge_0.5,share_bvp_hr_available,ppg_mae_bpm_q_ge_0.5,ppg_mae_bpm_all
+amusement,161,0.997,0.825,1.000,1.000,0.579,1.000,1.000,1.000,1.000,1.000,0.845,0.957,1.104,1.304
+baseline,407,0.997,0.811,1.000,1.000,0.681,1.000,1.000,1.000,1.000,1.000,0.853,0.980,1.020,1.215
+stress,306,0.995,0.286,0.999,1.000,0.446,1.000,1.000,1.000,1.000,0.999,0.284,0.490,2.595,4.090

@@ -1,0 +1,12 @@
+{
+  "ppg_auc": 0.9186025073746312,
+  "ppg_spearman_q_err": -0.5396559535911357,
+  "ppg_n": 874,
+  "ecg_vs_ppg_n": 463,
+  "ecg_vs_ppg_n_bad": 9,
+  "ecg_vs_ppg_auc": 0.4915565345080764,
+  "ecg_q_min_real": 0.9629629629629629,
+  "ecg_noise_auc": 0.971534717715769,
+  "ecg_noise_n": 1800,
+  "ppg_auc_with_injected_motion": 0.8530379771426041
+}

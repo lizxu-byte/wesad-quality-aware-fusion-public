@@ -1,0 +1,280 @@
+{
+  "subjects": 15,
+  "windows_evaluated": 874,
+  "kinds": [
+    "rf",
+    "lr"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "quality_validation": {
+    "ppg_auc": 0.919,
+    "ppg_spearman_q_err": -0.54,
+    "ppg_n": 874,
+    "ecg_vs_ppg_n": 463,
+    "ecg_vs_ppg_n_bad": 9,
+    "ecg_vs_ppg_auc": 0.492,
+    "ecg_q_min_real": 0.963,
+    "ecg_noise_auc": 0.972,
+    "ecg_noise_n": 1800,
+    "ppg_auc_with_injected_motion": 0.853
+  },
+  "clean_binary": {
+    "single:ecg": {
+      "macro_f1": 0.841,
+      "macro_f1_sd": 0.203,
+      "bacc": 0.856
+    },
+    "single:bvp": {
+      "macro_f1": 0.883,
+      "macro_f1_sd": 0.129,
+      "bacc": 0.887
+    },
+    "single:eda_chest": {
+      "macro_f1": 0.826,
+      "macro_f1_sd": 0.201,
+      "bacc": 0.848
+    },
+    "single:eda_wrist": {
+      "macro_f1": 0.873,
+      "macro_f1_sd": 0.159,
+      "bacc": 0.885
+    },
+    "single:resp": {
+      "macro_f1": 0.822,
+      "macro_f1_sd": 0.103,
+      "bacc": 0.83
+    },
+    "single:emg": {
+      "macro_f1": 0.553,
+      "macro_f1_sd": 0.098,
+      "bacc": 0.568
+    },
+    "single:temp_chest": {
+      "macro_f1": 0.769,
+      "macro_f1_sd": 0.167,
+      "bacc": 0.779
+    },
+    "single:temp_wrist": {
+      "macro_f1": 0.665,
+      "macro_f1_sd": 0.278,
+      "bacc": 0.696
+    },
+    "single:acc_chest": {
+      "macro_f1": 0.865,
+      "macro_f1_sd": 0.132,
+      "bacc": 0.869
+    },
+    "single:acc_wrist": {
+      "macro_f1": 0.616,
+      "macro_f1_sd": 0.114,
+      "bacc": 0.631
+    },
+    "wrist:early": {
+      "macro_f1": 0.962,
+      "macro_f1_sd": 0.108,
+      "bacc": 0.966
+    },
+    "wrist:late_avg": {
+      "macro_f1": 0.901,
+      "macro_f1_sd": 0.105,
+      "bacc": 0.903
+    },
+    "wrist:stack": {
+      "macro_f1": 0.947,
+      "macro_f1_sd": 0.125,
+      "bacc": 0.953
+    },
+    "wrist:qw_rule": {
+      "macro_f1": 0.888,
+      "macro_f1_sd": 0.109,
+      "bacc": 0.889
+    },
+    "wrist:qw_learned": {
+      "macro_f1": 0.899,
+      "macro_f1_sd": 0.139,
+      "bacc": 0.904
+    },
+    "chest:early": {
+      "macro_f1": 0.955,
+      "macro_f1_sd": 0.135,
+      "bacc": 0.96
+    },
+    "chest:late_avg": {
+      "macro_f1": 0.962,
+      "macro_f1_sd": 0.042,
+      "bacc": 0.963
+    },
+    "chest:stack": {
+      "macro_f1": 0.974,
+      "macro_f1_sd": 0.034,
+      "bacc": 0.974
+    },
+    "chest:qw_rule": {
+      "macro_f1": 0.961,
+      "macro_f1_sd": 0.039,
+      "bacc": 0.962
+    },
+    "chest:qw_learned": {
+      "macro_f1": 0.899,
+      "macro_f1_sd": 0.134,
+      "bacc": 0.903
+    },
+    "all:early": {
+      "macro_f1": 0.985,
+      "macro_f1_sd": 0.034,
+      "bacc": 0.984
+    },
+    "all:late_avg": {
+      "macro_f1": 0.974,
+      "macro_f1_sd": 0.037,
+      "bacc": 0.973
+    },
+    "all:stack": {
+      "macro_f1": 0.976,
+      "macro_f1_sd": 0.036,
+      "bacc": 0.975
+    },
+    "all:qw_rule": {
+      "macro_f1": 0.983,
+      "macro_f1_sd": 0.031,
+      "bacc": 0.982
+    },
+    "all:qw_learned": {
+      "macro_f1": 0.904,
+      "macro_f1_sd": 0.102,
+      "bacc": 0.902
+    }
+  },
+  "clean_three_class": {
+    "single:ecg": {
+      "macro_f1": 0.556,
+      "macro_f1_sd": 0.138,
+      "bacc": 0.591
+    },
+    "single:bvp": {
+      "macro_f1": 0.614,
+      "macro_f1_sd": 0.083,
+      "bacc": 0.642
+    },
+    "single:eda_chest": {
+      "macro_f1": 0.62,
+      "macro_f1_sd": 0.217,
+      "bacc": 0.65
+    },
+    "single:eda_wrist": {
+      "macro_f1": 0.611,
+      "macro_f1_sd": 0.195,
+      "bacc": 0.647
+    },
+    "single:resp": {
+      "macro_f1": 0.526,
+      "macro_f1_sd": 0.069,
+      "bacc": 0.54
+    },
+    "single:emg": {
+      "macro_f1": 0.387,
+      "macro_f1_sd": 0.126,
+      "bacc": 0.398
+    },
+    "single:temp_chest": {
+      "macro_f1": 0.52,
+      "macro_f1_sd": 0.135,
+      "bacc": 0.544
+    },
+    "single:temp_wrist": {
+      "macro_f1": 0.547,
+      "macro_f1_sd": 0.202,
+      "bacc": 0.587
+    },
+    "single:acc_chest": {
+      "macro_f1": 0.548,
+      "macro_f1_sd": 0.113,
+      "bacc": 0.557
+    },
+    "single:acc_wrist": {
+      "macro_f1": 0.465,
+      "macro_f1_sd": 0.123,
+      "bacc": 0.479
+    },
+    "wrist:early": {
+      "macro_f1": 0.802,
+      "macro_f1_sd": 0.146,
+      "bacc": 0.822
+    },
+    "wrist:late_avg": {
+      "macro_f1": 0.707,
+      "macro_f1_sd": 0.141,
+      "bacc": 0.722
+    },
+    "wrist:stack": {
+      "macro_f1": 0.752,
+      "macro_f1_sd": 0.126,
+      "bacc": 0.784
+    },
+    "wrist:qw_rule": {
+      "macro_f1": 0.695,
+      "macro_f1_sd": 0.147,
+      "bacc": 0.711
+    },
+    "wrist:qw_learned": {
+      "macro_f1": 0.69,
+      "macro_f1_sd": 0.161,
+      "bacc": 0.717
+    },
+    "chest:early": {
+      "macro_f1": 0.775,
+      "macro_f1_sd": 0.186,
+      "bacc": 0.793
+    },
+    "chest:late_avg": {
+      "macro_f1": 0.68,
+      "macro_f1_sd": 0.085,
+      "bacc": 0.698
+    },
+    "chest:stack": {
+      "macro_f1": 0.761,
+      "macro_f1_sd": 0.106,
+      "bacc": 0.77
+    },
+    "chest:qw_rule": {
+      "macro_f1": 0.693,
+      "macro_f1_sd": 0.099,
+      "bacc": 0.71
+    },
+    "chest:qw_learned": {
+      "macro_f1": 0.648,
+      "macro_f1_sd": 0.161,
+      "bacc": 0.668
+    },
+    "all:early": {
+      "macro_f1": 0.837,
+      "macro_f1_sd": 0.151,
+      "bacc": 0.855
+    },
+    "all:late_avg": {
+      "macro_f1": 0.722,
+      "macro_f1_sd": 0.102,
+      "bacc": 0.735
+    },
+    "all:stack": {
+      "macro_f1": 0.792,
+      "macro_f1_sd": 0.092,
+      "bacc": 0.801
+    },
+    "all:qw_rule": {
+      "macro_f1": 0.72,
+      "macro_f1_sd": 0.112,
+      "bacc": 0.734
+    },
+    "all:qw_learned": {
+      "macro_f1": 0.645,
+      "macro_f1_sd": 0.137,
+      "bacc": 0.675
+    }
+  },
+  "runtime_min": 0.9
+}
