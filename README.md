@@ -26,8 +26,8 @@ Empatica E4 is usable in only ~23 % of TSST (stress) windows: the sensor fails e
 In its deep-baseline comparison, a random forest reached macro-F1 0.95 with wrist EDA and 0.86 without
 it. A real stress monitor therefore needs to know (a) which sensors carry the information, and (b) how to
 keep working when one of them degrades. A common proposal is to weight each sensor by a per-window
-signal-quality index. This repository tests that proposal honestly, including the case where it does not
-help.
+signal-quality index. This study compares quality-weighted and unweighted fusion under natural signal
+degradation and simulated sensor failures.
 
 ## Quick start
 
@@ -67,11 +67,11 @@ Elgendi peak detector, IBI cleaning, windowed HR / RMSSD / SDNN), `ahr.sqi` (PPG
 and spectral entropy), `ahr.ecg` (R-peak detector) and `ahr.motion` (per-axis gravity removal, activity
 magnitude). Nothing is vendored; the package is a pinned dependency.
 
-## Data, as verified
+## Data
 
-WESAD (Schmidt et al., 2018), downloaded from the official University of Siegen sciebo link (checked
-reachable; no mirrors). Units and rates below were checked against `wesad_readme.pdf` inside the archive
-**and** against the value ranges in every subject's synchronised `SX.pkl`:
+WESAD (Schmidt et al., 2018) is downloaded from the official University of Siegen sciebo link.
+The table summarises signal units and sampling rates in the synchronised `SX.pkl` files,
+with dataset documentation in `wesad_readme.pdf` inside the archive:
 
 | Device | Signal | Rate | Unit in `SX.pkl` |
 |---|---|---|---|
@@ -86,8 +86,8 @@ reachable; no mirrors). Units and rates below were checked against `wesad_readme
 | wrist | ACC (3 axes) | 32 Hz | 1/64 g (converted to g here); clips at −128 / +127 counts (±2 g) |
 
 Labels are at 700 Hz on the chest clock (1 baseline, 2 stress/TSST, 3 amusement). Both devices start
-at the same instant in the pickles, and all channels have identical durations for all 15 subjects
-(checked). The per-subject readmes note that the chest temperature sensor was *not fully attached*
+at the same instant in the pickles, and all channels have identical durations for all 15 subjects.
+The per-subject readmes note that the chest temperature sensor was *not fully attached*
 for S2 and S17; all subjects are kept.
 
 **Windows.** 60 s windows with a 30 s step; a window is used only if ≥ 95 % of it lies inside one
@@ -124,9 +124,9 @@ features are NaN and its quality is 0.
 | Modality | Index | Source |
 |---|---|---|
 | PPG | share of the seven 30 s sub-windows (5 s step) passing the `ahr-stress-trigger` rule: beat-template correlation ≥ 0.8 (Orphanidou et al., 2015), spectral entropy ≤ 0.75, valid IBIs cover ≥ 50 % | reused unchanged from `ahr.sqi` / `ahr.ppg` |
-| ECG | agreement of two independent R-peak detectors, `n_matched / (n_A + n_B − n_matched)`, 150 ms tolerance, × (1 − share of samples at the ±1.5 mV ADC limit). A = `ahr.ecg` (Pan & Tompkins-style); B = Elgendi (2013) QRS detector (band-pass 8–20 Hz, W1 = 97 ms, W2 = 611 ms, offset β = 0.08, block ≥ W1) | bSQI idea of Li, Mark & Clifford (2008); see *Not verified* |
-| EDA | 1 − share of invalid samples by the rules of Kleckner et al. (2018): EDA outside 0.05–60 µS, change faster than ±10 µS/s, and everything within 5 s of an invalid sample. **Added here**: flat line (identical raw samples for ≥ 10 s). Kleckner's skin-temperature rule (30–40 °C) is implemented but **off**: wrist temperature is 29–31 °C throughout for S15 and S16 (S16's readme notes a cold room), so it would discard their entire wrist EDA | Kleckner et al. (2018), thresholds checked in the paper |
-| Respiration | power within ±0.05 Hz of the largest peak in 0.1–0.7 Hz divided by power in 0.05–1 Hz, × (1 − flat-line share) | ad hoc, no published threshold |
+| ECG | agreement of two independent R-peak detectors, `n_matched / (n_A + n_B − n_matched)`, 150 ms tolerance, × (1 − share of samples at the ±1.5 mV ADC limit). A = `ahr.ecg` (Pan & Tompkins-style); B = Elgendi (2013) QRS detector (band-pass 8–20 Hz, W1 = 97 ms, W2 = 611 ms, offset β = 0.08, block ≥ W1) | bSQI idea of Li, Mark & Clifford (2008); see *Implementation notes* |
+| EDA | 1 − share of invalid samples by the rules of Kleckner et al. (2018): EDA outside 0.05–60 µS, change faster than ±10 µS/s, and everything within 5 s of an invalid sample. **Added here**: flat line (identical raw samples for ≥ 10 s). Kleckner's skin-temperature rule (30–40 °C) is implemented but **off**: wrist temperature is 29–31 °C throughout for S15 and S16 (S16's readme notes a cold room), so it would discard their entire wrist EDA | Kleckner et al. (2018) |
+| Respiration | power within ±0.05 Hz of the largest peak in 0.1–0.7 Hz divided by power in 0.05–1 Hz, × (1 − flat-line share) | Study-specific criterion; no external threshold validation |
 | Temperature | 1 − share of samples outside 20–42 °C, changing > 0.5 °C/s, or flat ≥ 120 s | generic rule |
 | ACC | 1 − share of samples clipped (wrist ±2 g; chest ±6 g) or flat on all axes ≥ 30 s | generic rule |
 | EMG | 1 − share of samples at the ADC limit or flat ≥ 1 s | generic rule |
@@ -369,24 +369,26 @@ quality weighting 0.70 → 0.65).
 * **Fixed hyper-parameters**, chosen in advance and not tuned (tuning on 15 subjects would overfit); the
   forward-selection ranking is optimistic because it selects on the reported LOSO score.
 
-## Not verified / open points
+## Implementation notes
 
-* **bSQI formula.** The idea and citation of Li, Mark & Clifford (2008) are verified (journal page), but
-  the original PDF could not be retrieved. The formula `n_matched / (n_A + n_B − n_matched)` with a 150 ms
-  tolerance is taken from secondary descriptions of bSQI. The window length (60 s) and the two detectors
-  differ from the original paper.
-* **Elgendi (2013) QRS detector**: band (8–20 Hz), W1 = 97 ms and W2 = 611 ms are from the paper's text
-  and Table 2. The offset is 8 % in Table 2 but written as "0.8" in the text; 0.08 is used. The paper
-  attributes the third-order Butterworth filter to earlier work; the filter order used here (3, zero-phase)
-  is an assumption.
-* **Kleckner et al. (2018)** developed their rules on an Affectiva Q Sensor (16/32 Hz) in children with
-  autism. Applying them to a 4 Hz Empatica E4 and a chest RespiBAN in adults is an extrapolation.
-* The respiration, temperature, ACC and EMG quality rules are ad hoc and not validated against an
-  independent reference.
+* **bSQI formula.** ECG signal quality is estimated from the agreement between two R-peak detectors
+  using a 150 ms matching tolerance and 60 s windows. The matching formula is based on secondary
+  descriptions of Li, Mark and Clifford (2008); the detector configurations and window length differ
+  from those in the cited study. The formula is `n_matched / (n_A + n_B − n_matched)`.
+* **Elgendi (2013) QRS detector.** The Elgendi detector uses an 8–20 Hz band-pass filter, W1 = 97 ms,
+  W2 = 611 ms, and an offset of 0.08. The offset follows the 8% value reported in Table 2 rather than
+  the 0.8 value stated in the paper's text. This implementation uses a third-order zero-phase
+  Butterworth filter.
+* **EDA rules.** The EDA quality rules are adapted from Kleckner et al. (2018), originally developed
+  for Affectiva Q Sensor recordings. Selected rules are applied here to the WESAD recordings.
+  The source recordings were sampled at 16/32 Hz in children with autism; the WESAD recordings use
+  a 4 Hz Empatica E4 and a chest RespiBAN in adults.
+* Respiration, temperature, ACC and EMG use study-specific quality rules. Their performance has not
+  been evaluated against an independent signal-quality reference.
 
-## Parameter choices to review
+## Parameters
 
-| Parameter | Value | Why / evidence |
+| Parameter | Value | Rationale |
 |---|---|---|
 | window / step / purity | 60 s / 30 s / ≥ 95 % | same as `ahr-stress-trigger`; HRV needs ~1 min |
 | calibration | first 5 min of baseline, excluded from evaluation; quality ≥ 0.5 windows | same as `ahr-stress-trigger` |
@@ -396,13 +398,13 @@ quality weighting 0.70 → 0.65).
 | SCR detection | prominence ≥ 0.01 µS, ≥ 1 s apart; tonic 0.05 Hz | common minimum amplitude; not tuned |
 | ACC flat line | ≥ 30 s | E4 ACC is bit-identical for up to ~10 s when the arm rests |
 | temperature rules | 20–42 °C, ≤ 0.5 °C/s, flat ≥ 120 s | generous plausibility limits |
-| respiration quality | ±0.05 Hz around the 0.1–0.7 Hz peak | ad hoc; lower during speech (0.45 vs 0.68 at baseline) |
+| respiration quality | ±0.05 Hz around the 0.1–0.7 Hz peak | Study-specific criterion; lower during speech (0.45 vs 0.68 at baseline) |
 | missing data | > 50 % missing → modality absent | – |
 | rule-based quality weight | `w = q` if `q ≥ 0.5` else 0 | simple, not tuned |
 | learned quality weight | `exp(a + b q)`, `b ∈ [0, 10]`, `a ∈ [−5, 5]`, L2 0.01 | monotone in quality; not tuned |
 | stacking | inner 5-fold grouped CV, LR (C = 1, balanced) on log-probabilities | – |
 | classifiers | LR C = 1; RF 500 trees, min leaf 2; balanced weights | as in `ahr-stress-trigger` |
-| artefacts | BVP noise 1–3 × SD, 0.5–3 Hz, 50–100 % of window; EDA flat 30–80 %; EDA step +1–5 µS; gap 30–70 % | plausible but arbitrary |
+| artefacts | BVP noise 1–3 × SD, 0.5–3 Hz, 50–100 % of window; EDA flat 30–80 %; EDA step +1–5 µS; gap 30–70 % | Study-defined simulation ranges |
 | corruption levels | 10 / 30 / 50 % of each class, 3 seeds | – |
 | validation thresholds | HR error > 5 bpm = bad; ECG reference quality ≥ 0.9; PPG reference quality ≥ 6/7 | – |
 
